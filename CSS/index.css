@@ -1,0 +1,15 @@
+body{
+    background-color: #35654d !important;
+}
+
+#header{
+    background-color: #a58d00;
+}
+
+#dealer-box{
+    background-color: grey;
+}
+
+#player-box{
+    background-color: grey;
+}
