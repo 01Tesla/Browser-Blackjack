@@ -1,3 +1,34 @@
+/* --- Main Code --- */
+
+//track card sums and player credits
+var dealerCardSum = 0;
+var playerCardSum = 0;
+
+var dealerCards = [];
+var playerCards = [];
+
+var playerAccount = 0;
+
+//track aces to calculate CardSum
+var dealerAceCount = 0;
+var playerAceCount = 0;
+
+//booleans to allow buttons
+var below21 = false;
+var canSplit = false;
+var gameRunning = false;
+
+var deck;
+
+var hiddenCard;
+
+window.onload = function(){
+    getDeck();
+    shuffle();
+    startGame();
+}
+
+
 
 /* --- cards, deck and related functions --- */
 
@@ -12,21 +43,19 @@ class card{
 }
 
 function getDeck(){
-    var deck = new Array();
+    deck = new Array();
 
     for(let i=0; i < suits.length; i++){
         for(let j=0; j<values.length; j++){
             deck.push(new card(suits[i], values[j]));
         }
     }
-
-    return deck;
 }
 
-function shuffle(deck){
+function shuffle(){
     for(let i=0; i<100; i++){
-        randInt1 = Math.random()*52;
-        randInt2 = Math.random()*52;
+        randInt1 = Math.floor(Math.random() * deck.length);
+        randInt2 = Math.floor(Math.random() * deck.length);
 
         temp = deck[randInt1];
         deck[randInt1] = deck[randInt2];
@@ -35,27 +64,63 @@ function shuffle(deck){
 }
 
 
-/* --- Main Code --- */
-var dealerCardSum = 0;
-var playerCardSum = 0;
 
-var playerAccount = 0;
+/* --- game logic functions --- */
+function startGame(){
+    //deal first round
+    playerCards[0] = deck.pop();
+    playerCardSum = playerCardSum + getCardValue(playerCards[0]);
+    if(checkAce(playerCards[0])){
+        playerAceCount++;
+    }
 
-//track aces to calculate CardSum
-var dealerAceCount = 0;
-var playerAceCount = 0;
+    hiddenCard = deck.pop();
+    dealerCards[0] = hiddenCard;
 
-//booleans to allow buttons
-var canHit = false;
-var canSplit = false;
-var gameRunning = false;
+    //deal second round
+    playerCards[1] = deck.pop();
+    playerCardSum = playerCardSum + getCardValue(playerCards[1]);
+    if(checkAce(playerCards[1])){
+        playerAceCount++;
+    }
 
-var deck = getDeck();
-shuffle(deck);
+    dealerCards[1] = deck.pop();
+    dealerCardSum = dealerCardSum + getCardValue(dealerCards[1]);
+    if(checkAce(dealerCards[1])){
+        dealerAceCount++;
+    }
 
-for(let i=0; i<deck.length; i++){
-    console.log(deck[i].suit + " " + deck[i].value); 
+    //test print
+    for(let i=0; i<playerCards.length; i++){
+        console.log(playerCards[i].suit + " " + playerCards[i].value);
+    }
+    console.log(playerCardSum);
+
 }
 
-/* -- game loop -- */
+function getCardValue(card){
+    var value = 0;
+    if(card.value == "J" || card.value == "Q" || card.value == "K"){
+        value = 10;
+    }
+    else if(card.value == "A"){
+        value = 11;
+    }
+    else{
+        value = card.value;
+    }
 
+    return value;
+}
+
+function checkAce(card){
+    if(card.value == "A"){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+
+/* --- button onclick functions functions --- */
