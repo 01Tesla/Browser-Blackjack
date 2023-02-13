@@ -52,7 +52,7 @@
     <!-- dealer actions -->
     <div class="d-flex justify-content-center m-4">
         <div>
-            <button type="button" class="btn btn-light btn-lg m-2" id="newRound"> NEW ROUND </button>
+            <button type="button" class="btn btn-light btn-lg m-2" id="newRound" onclick="newGame()"> NEW ROUND </button>
         </div>
     </div>
 
@@ -64,16 +64,16 @@
             <div class="container m-2">
                 <div class="row"> 
                     <div class="col">
-                        <p id="dSlot1"> card 1 </p>
+                        <p id="pSlot1"> card 1 </p>
                     </div>
                     <div class="col">
-                        <p id="dSlot2"> card 2 </p>
+                        <p id="pSlot2"> card 2 </p>
                     </div>
                     <div class="col">
-                        <p id="dSlot3"> card 3 </p>
+                        <p id="pSlot3"> card 3 </p>
                     </div>
                     <div class="col">
-                        <p id="dSlot4"> card 4 </p>
+                        <p id="pSlot4"> card 4 </p>
                     </div>
                 </div>
             </div>
@@ -83,9 +83,9 @@
     <!-- player actions -->
     <div class="d-flex justify-content-center m-4">
         <div>
-            <button type="button" class="btn btn-light btn-lg m-2" id="hit"> HIT </button>
-            <button type="button" class="btn btn-light btn-lg m-2" id="stay"> STAY </button>
-            <button type="button" class="btn btn-light btn-lg m-2" id="double"> DOUBLE </button>
+            <button type="button" class="btn btn-light btn-lg m-2" id="hit" onclick="hit()"> HIT </button>
+            <button type="button" class="btn btn-light btn-lg m-2" id="stay" onclick="dealerPhase()"> STAY </button>
+            <button type="button" class="btn btn-light btn-lg m-2" id="double" onclick="double()"> DOUBLE </button>
             <button type="button" class="btn btn-light btn-lg m-2" id="split"> SPLIT </button>
         </div>
     </div>
