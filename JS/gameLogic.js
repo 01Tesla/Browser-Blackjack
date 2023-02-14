@@ -30,11 +30,11 @@ window.onload = function(){
 
 /* --- cards, deck and related functions --- */
 
-let suits = ["spades", "diamonds", "heart", "club"];
+let suits = ["spades", "diamonds", "hearts", "clubs"];
 let values = ["A", 2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K"];
 
 class card{
-    constructor(suit, value, icon){
+    constructor(suit, value){
         this.suit = suit;
         this.value = value;
         this.isHidden = false;
@@ -97,33 +97,48 @@ function disableButtons(value){
         document.getElementById("hit").disabled = true;
         document.getElementById("stay").disabled = true;
         document.getElementById("double").disabled = true;
-        document.getElementById("split").disabled = true;
     }
     else{
         document.getElementById("newRound").disabled = true;
         document.getElementById("hit").disabled = false;
         document.getElementById("stay").disabled = false;
         document.getElementById("double").disabled = false;
-        document.getElementById("split").disabled = false;
     }
 }
 
 //adds a new card to the hand of either player or dealer
 function addCard(person){
     if(person == dealer){
+        //add card
         dealerCards.push(deck.pop());
+
+        //adjust sum
         dealerSum = dealerSum + getCardValue(dealerCards[dealerCards.length-1]);
+
+        //show onscreen
+        showCard(dealer, dealerCards[dealerCards.length-1]);
     }
 
     else if(person ==hidden){
+        //add card
         dealerCards.push(deck.pop());
         dealerCards[dealerCards.length-1].isHidden = true;
+        
+        //adjust sum
         dealerSum = dealerSum + getCardValue(dealerCards[dealerCards.length-1]);
+
+        //show onscreen
+        showCard(dealer, dealerCards[dealerCards.length-1]);
     }
 
     else if(person == player){
         playerCards.push(deck.pop());
+
         playerSum = playerSum + getCardValue(playerCards[playerCards.length-1]);
+        document.getElementById("cardSumP").innerHTML = playerSum;
+
+
+        showCard(player, playerCards[playerCards.length-1]);
     }
 }
 
@@ -169,19 +184,113 @@ function getCardValue(card){
 2. determine results based on sums
 3. prints results to screen
 4. enables new game button
+5. add win to account
+6. reset booleans
 */
-
 function dealerPhase(){
     console.log("dealers turn");
 
     dealerCards[0].isHidden = false;
+    
 
+    //dealer draws until sum >= 17
     while(dealerSum < 17){
         addCard(dealer);
     }
 
     printStats(dealer);
     console.log("dealer: " + dealerSum);
+
+    //determine result and print
+    if(dealerSum <= 21 && dealerSum > playerSum){
+        document.getElementById("results").innerHTML = "you lost to the dealer";
+        if(hasDoubled){
+            credits = credits - 20;
+        }
+        else{
+            credits = credits - 10;
+        }
+    }
+    else if(playerSum > 21){
+        document.getElementById("results").innerHTML = "you overbought yourself";
+        if(hasDoubled){
+            credits = credits - 20;
+        }
+        else{
+            credits = credits - 10;
+        }
+    }
+    else if((playerSum <= 21 && playerSum > dealerSum) || (playerSum <= 21 && dealerSum > 21)){
+        document.getElementById("results").innerHTML = "you won!";
+        if(hasDoubled){
+            credits = credits + 20;
+        }
+        else{
+            credits = credits + 10;
+        }
+    }
+    else if(dealerSum <= 21 && dealerSum == playerSum){
+        document.getElementById("results").innerHTML = "you go even with the dealer";
+    }
+
+    document.getElementById("cardSumD").innerHTML = dealerSum;
+
+    document.getElementById("credit").innerHTML = credits;
+
+    //reset buttons
+    disableButtons(true);
+
+    //reset game values
+    clearArray(playerCards);
+    clearArray(dealerCards);
+    clearArray(playerSplit);
+    hasDoubled = false;
+    dealerAceCount = 0;
+    playerAceCount = 0;
+    playerSum = 0;
+    dealerSum = 0;
+}
+
+//function to reset arrays
+function clearArray(array){
+    while(array.length > 0){
+        array.pop();
+    }
+}
+
+//add card to screen
+function showCard(person, card){
+    var div = document.createElement("div");
+    div.setAttribute("class", "col");
+
+    var text;
+
+    var parent;
+
+    if(person == dealer){
+        if(card.isHidden == true){
+            text = document.createTextNode("hidden");
+        }
+        else{
+            text = document.createTextNode(card.suit + " " + card.value);
+        }
+
+        parent = document.getElementById("dCardSlots");
+    }
+    else if(person == player){
+        text = document.createTextNode(card.suit + " " + card.value);
+        parent = document.getElementById("pCardSlots");
+    }
+
+    div.appendChild(text);
+    parent.appendChild(div);
+}
+
+//removes all child nodes of div (for resetting hands)
+function removeAllChildNodes(parent){
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
 }
 
 
@@ -189,6 +298,9 @@ function dealerPhase(){
 function newGame(){
     running = true;
     console.log("started");
+    document.getElementById("results").innerHTML = "-- results --";
+    removeAllChildNodes(document.getElementById("pCardSlots"));
+    removeAllChildNodes(document.getElementById("dCardSlots"));
     gameStart();
 }
 
@@ -199,6 +311,9 @@ function hit(){
     if(playerSum >= 21){
         dealerPhase();
     }
+    
+    //disable double after first hit
+    document.getElementById("double").disabled = true;
 }
 
 function double(){
@@ -206,4 +321,8 @@ function double(){
     printStats(player);
     hasDoubled = true;
     dealerPhase();
+}
+
+function restart(){
+    location. reload();
 }

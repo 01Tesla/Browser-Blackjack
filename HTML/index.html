@@ -19,10 +19,10 @@
         <h1> Welcome to the table! </h1>
         <div class="d-flex justify-content-center">
             <h3> Your credit: </h3>
-            <h3 id="credit"> 100€ </h3>
+            <h3 id="credit"> 100 </h3>
             <!-- put calculated credit here -->
         </div>
-        <button type="button" class="btn btn-dark btn-lg m-2" id="restart"> RESTART GAME </button>
+        <button type="button" class="btn btn-dark btn-lg m-2" id="restart" onclick="restart()"> RESTART GAME </button>
     </div>
 
     <!-- dealer -->
@@ -31,20 +31,13 @@
             <h3> Dealer </h3>
             <!-- cards -->
             <div class="container m-2">
-                <div class="row"> 
-                    <div class="col">
-                        <p id="dSlot1"> card 1 </p>
-                    </div>
-                    <div class="col">
-                        <p id="dSlot2"> card 2 </p>
-                    </div>
-                    <div class="col">
-                        <p id="dSlot3"> card 3 </p>
-                    </div>
-                    <div class="col">
-                        <p id="dSlot4"> card 4 </p>
-                    </div>
+                <div class="row" id="dCardSlots"> 
+                    
                 </div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <h5> Dealer total: &nbsp;</h5>
+                <h5 id="cardSumD"> </h5>
             </div>
         </div>
     </div>
@@ -62,20 +55,13 @@
             <h3> Your Hand </h3>
             <!-- cards -->
             <div class="container m-2">
-                <div class="row"> 
-                    <div class="col">
-                        <p id="pSlot1"> card 1 </p>
-                    </div>
-                    <div class="col">
-                        <p id="pSlot2"> card 2 </p>
-                    </div>
-                    <div class="col">
-                        <p id="pSlot3"> card 3 </p>
-                    </div>
-                    <div class="col">
-                        <p id="pSlot4"> card 4 </p>
-                    </div>
+                <div class="row" id="pCardSlots"> 
+                    
                 </div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <h5> Your total: &nbsp;</h5>
+                <h5 id="cardSumP"> </h5>
             </div>
         </div>
     </div>
@@ -86,7 +72,13 @@
             <button type="button" class="btn btn-light btn-lg m-2" id="hit" onclick="hit()"> HIT </button>
             <button type="button" class="btn btn-light btn-lg m-2" id="stay" onclick="dealerPhase()"> STAY </button>
             <button type="button" class="btn btn-light btn-lg m-2" id="double" onclick="double()"> DOUBLE </button>
-            <button type="button" class="btn btn-light btn-lg m-2" id="split"> SPLIT </button>
+        </div>
+    </div>
+
+    <!-- result screen -->
+    <div class="d-flex justify-content-center m-4">
+        <div class="text-white text-center">
+            <h2 id="results"> </h2>
         </div>
     </div>
 </body>
