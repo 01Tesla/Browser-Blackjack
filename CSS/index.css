@@ -13,3 +13,7 @@ body{
 #player-box{
     background-color: grey;
 }
+
+img{
+    max-width: 100px;
+}

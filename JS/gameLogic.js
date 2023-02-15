@@ -38,6 +38,7 @@ class card{
         this.suit = suit;
         this.value = value;
         this.isHidden = false;
+        this.imageSrc = "../IMAGES/" + this.value + "_of_" + this.suit + ".png";
     }
 }
 
@@ -67,11 +68,11 @@ function shuffle(){
 
 
 /* --- game logic functions --- */
-//1. deal 1 card to player 1 to dealer (hidden), then 1 to both
-//2. enable/disable buttons accordingly
 
 var running = false;
 
+//1. deal 1 card to player 1 to dealer (hidden), then 1 to both
+//2. enable/disable buttons accordingly
 function gameStart(){
     getDeck();
     shuffle();
@@ -201,7 +202,7 @@ function dealerPhase(){
     printStats(dealer);
     console.log("dealer: " + dealerSum);
 
-    //determine result and print
+    //determine result and print to screen
     if(dealerSum <= 21 && dealerSum > playerSum){
         document.getElementById("results").innerHTML = "you lost to the dealer";
         if(hasDoubled){
@@ -233,8 +234,12 @@ function dealerPhase(){
         document.getElementById("results").innerHTML = "you go even with the dealer";
     }
 
-    document.getElementById("cardSumD").innerHTML = dealerSum;
+    //"flip" hidden card
+    document.getElementById("hiddenCardText").innerHTML = dealerCards[0].suit + " " + dealerCards[0].value;
+    document.getElementById("hiddenCardImg").setAttribute("src", dealerCards[0].imageSrc);
 
+    //adjust dealer sum and credits
+    document.getElementById("cardSumD").innerHTML = dealerSum;
     document.getElementById("credit").innerHTML = credits;
 
     //reset buttons
@@ -269,20 +274,38 @@ function showCard(person, card){
 
     if(person == dealer){
         if(card.isHidden == true){
-            text = document.createTextNode("hidden");
+            //create p tag and fill it with content
+            text = document.createElement("p");
+            text.setAttribute("id", "hiddenCardText");
+            text.appendChild(document.createTextNode("hidden"));
+
+            img = document.createElement("img");
+            img.setAttribute("id", "hiddenCardImg");
+            img.setAttribute("src", "../IMAGES/cardback.png");
         }
         else{
-            text = document.createTextNode(card.suit + " " + card.value);
+            text = document.createElement("p");
+            text.appendChild(document.createTextNode(card.suit + " " + card.value));
+
+            img = document.createElement("img");
+            img.setAttribute("src", card.imageSrc);
         }
 
         parent = document.getElementById("dCardSlots");
     }
     else if(person == player){
-        text = document.createTextNode(card.suit + " " + card.value);
+        text = document.createElement("p");
+        text.appendChild(document.createTextNode(card.suit + " " + card.value));
+
+        img = document.createElement("img");
+        img.setAttribute("src", card.imageSrc);
+
         parent = document.getElementById("pCardSlots");
     }
 
     div.appendChild(text);
+    div.appendChild(img);
+
     parent.appendChild(div);
 }
 
@@ -299,8 +322,12 @@ function newGame(){
     running = true;
     console.log("started");
     document.getElementById("results").innerHTML = "-- results --";
+
     removeAllChildNodes(document.getElementById("pCardSlots"));
     removeAllChildNodes(document.getElementById("dCardSlots"));
+
+    document.getElementById("cardSumD").innerHTML = dealerSum;
+
     gameStart();
 }
 
